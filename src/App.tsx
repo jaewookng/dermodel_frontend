@@ -3,12 +3,13 @@ import FaceModel from './components/FaceModel'
 import Dropdown from './components/Dropdown'
 import Tooltip from './components/Tooltip'
 import ResetButton from './components/ResetButton'
+import { useRef } from 'react'
 
 function App() {
-  // Add state management for the reset functionality
+  const faceModelRef = useRef<{ resetView?: () => void }>({});
+
   const handleReset = () => {
-    // Add your reset logic here
-    console.log('Reset triggered')
+    faceModelRef.current.resetView?.();
   }
 
   return (
@@ -23,7 +24,7 @@ function App() {
         </div>
         <Dropdown />
         <Tooltip />
-        <FaceModel />
+        <FaceModel ref={faceModelRef} />
       </div>
     </>
   )
