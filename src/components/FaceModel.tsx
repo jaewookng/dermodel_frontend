@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-const FaceModel = forwardRef((props, ref) => {
+const FaceModel = forwardRef((_, ref) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<any>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
