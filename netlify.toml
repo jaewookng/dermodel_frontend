@@ -1,7 +1,7 @@
 [build]
   command = "npm install && npm run build"
   commandOrigin = "config"
-  publish = "/opt/build/repo/opt/build/repo/dist"
+  publish = "/dist"
   publishOrigin = "config"
   [build.environment]
     VITE_API_BASE_URL = "https://dermodel-backend-c1b9c7f69d88.herokuapp.com/api"
