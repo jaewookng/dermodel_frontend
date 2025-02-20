@@ -13,6 +13,20 @@ export default defineConfig({
     port: 3000
   },
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    chunkSizeWarningLimit: 500,
+    rollupOptions: {
+      external: ['three'],
+      output: {
+        manualChunks: (id: string): string | undefined => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react')) return 'react-vendor';
+            if (id.includes('three')) return 'three-vendor';
+            return 'vendor';
+          }
+          return undefined;
+        }
+      }
+    }
   }
 })

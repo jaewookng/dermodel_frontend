@@ -1,12 +1,18 @@
 import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
-import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+// Add type for window.THREE
+declare global {
+  interface Window {
+    THREE: any;
+  }
+}
 
 const FaceModel = forwardRef((_, ref) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<any>(null);
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const cameraRef = useRef<any>(null);
 
   useImperativeHandle(ref, () => ({
     resetView: () => {
@@ -19,33 +25,33 @@ const FaceModel = forwardRef((_, ref) => {
   }));
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    if (!mountRef.current || !window.THREE) return;
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xB5ECE5);
+    const scene = new window.THREE.Scene();
+    scene.background = new window.THREE.Color(0xB5ECE5);
 
     // Add ambient light for overall illumination
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    const ambientLight = new window.THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
     // Add directional lights for better depth
-    const frontLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const frontLight = new window.THREE.DirectionalLight(0xffffff, 0.8);
     frontLight.position.set(0, 0, 10);
     scene.add(frontLight);
 
-    const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    const backLight = new window.THREE.DirectionalLight(0xffffff, 0.5);
     backLight.position.set(0, 0, -10);
     scene.add(backLight);
 
-    const topLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    const topLight = new window.THREE.DirectionalLight(0xffffff, 0.5);
     topLight.position.set(0, 10, 0);
     scene.add(topLight);
 
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(-2, 0.5, 2); // Moved camera even closer
+    const camera = new window.THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(-2, 0.5, 2);
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new window.THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     mountRef.current.appendChild(renderer.domElement);
@@ -67,10 +73,10 @@ const FaceModel = forwardRef((_, ref) => {
       const face = gltf.scene;
       
       // Adjust material properties if needed
-      face.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          child.material.metalness = 0.3;  // Reduce metalness
-          child.material.roughness = 0.7;  // Increase roughness
+      face.traverse((child: any) => {
+        if (child.isMesh) {
+          child.material.metalness = 0.3;
+          child.material.roughness = 0.7;
         }
       });
       
