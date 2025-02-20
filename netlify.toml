@@ -1,7 +1,12 @@
 [build]
   command = "npm install && npm run build"
-  publish = "dist"
-  environment = { NODE_VERSION = "20", NODE_ENV = "production" }
+  commandOrigin = "config"
+  publish = "/opt/build/repo/dist"
+  publishOrigin = "config"
+  [build.environment]
+    VITE_API_BASE_URL = "https://dermodel-backend-c1b9c7f69d88.herokuapp.com/api"
+    NODE_VERSION = "20"
+    NODE_ENV = "production"
 
 [dev]
   command = "npm run dev"
@@ -13,3 +18,4 @@
   from = "/*"
   to = "/index.html"
   status = 200
+  origin = "config"
