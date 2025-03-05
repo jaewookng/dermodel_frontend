@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -16,7 +16,6 @@ export default defineConfig({
     outDir: 'dist',
     chunkSizeWarningLimit: 500,
     rollupOptions: {
-      external: ['three'],
       output: {
         manualChunks: (id: string): string | undefined => {
           if (id.includes('node_modules')) {

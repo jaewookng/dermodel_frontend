@@ -1,16 +1,21 @@
 import './App.css'
-import { FC } from 'react'
+import { FC, useRef } from 'react'
 import FaceModel from './components/FaceModel'
 import Dropdown from './components/Dropdown'
 import Tooltip from './components/Tooltip'
 import ResetButton from './components/ResetButton'
-import { useRef } from 'react'
+
+interface FaceModelHandle {
+  resetView: () => void;
+}
 
 const App: FC = () => {
-  const faceModelRef = useRef<{ resetView?: () => void }>({});
+  const faceModelRef = useRef<FaceModelHandle>(null);
 
   const handleReset = () => {
-    faceModelRef.current.resetView?.();
+    if (faceModelRef.current) {
+      faceModelRef.current.resetView();
+    }
   }
 
   return (

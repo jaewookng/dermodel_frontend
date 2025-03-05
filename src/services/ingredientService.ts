@@ -5,14 +5,14 @@ interface Ingredient {
 }
 
 interface ApiResponse {
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
   results: Array<{
     name: string;
-    [key: string]: any;  // For other properties we don't use
+    [key: string]: unknown;  // For other properties we don't use
   }>;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://dermodel-backend-c1b9c7f69d88.herokuapp.com/api';
 
 export const fetchIngredients = async (): Promise<Ingredient[]> => {
   try {

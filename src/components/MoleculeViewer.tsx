@@ -35,8 +35,11 @@ const MoleculeViewer: React.FC<MoleculeViewerProps> = ({
 
     loadMolecule();
     
+    // Store reference to the current moleculeService for cleanup
+    const currentMoleculeService = moleculeService.current;
+    
     return () => {
-        moleculeService.current.cleanup();
+        currentMoleculeService.cleanup();
     };
   }, [moleculeName]);
 

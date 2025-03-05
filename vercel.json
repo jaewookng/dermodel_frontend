@@ -1,0 +1,14 @@
+{
+  "buildCommand": "npm run build",
+  "framework": "vite",
+  "outputDirectory": "dist",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_API_BASE_URL": "https://dermodel-backend-c1b9c7f69d88.herokuapp.com/api"
+  }
+}

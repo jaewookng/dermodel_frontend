@@ -25,7 +25,7 @@ const MOLECULE_MAPPINGS: Record<string, { cid: string; name: string; fallbackIma
 type Viewer3D = {
     clear: () => void;
     addModel: (data: string, format: string) => void;
-    setStyle: (sel: object, style: object) => void;
+    setStyle: (sel: Record<string, unknown>, style: Record<string, unknown>) => void;
     zoomTo: () => void;
     render: () => void;
     removeAllModels: () => void;
@@ -42,7 +42,7 @@ const RETRY_DELAY = 1000;
 export class MoleculeService {
     private viewer: Viewer3D | null = null;
     private initializationPromise: Promise<Viewer3D> | null = null;
-    private requestQueue: Map<string, Promise<any>> = new Map();
+    private requestQueue: Map<string, Promise<unknown>> = new Map();
     private fallbackImage: string = '/path/to/default-molecule.png';  // Set default path
 
     constructor(config?: MoleculeImageConfig) {
@@ -132,9 +132,33 @@ export class MoleculeService {
             const result = await this.fetchFromPubChem(name);
             if (!result) throw new Error('No molecule data');
 
-            if ('useFallback' in result) {
+            // Type guard for the result
+            interface FallbackResult {
+                useFallback: boolean;
+                fallbackImage: string;
+            }
+            
+            interface CidResult {
+                cid: string;
+            }
+            
+            // Type guard function
+            function isFallbackResult(obj: unknown): obj is FallbackResult {
+                return typeof obj === 'object' && obj !== null && 
+                    'useFallback' in obj && 'fallbackImage' in obj;
+            }
+            
+            function isCidResult(obj: unknown): obj is CidResult {
+                return typeof obj === 'object' && obj !== null && 'cid' in obj;
+            }
+
+            if (isFallbackResult(result)) {
                 await this.validateAndDisplayImage(container, result.fallbackImage);
                 return;
+            }
+
+            if (!isCidResult(result)) {
+                throw new Error('Invalid result format');
             }
 
             const sdf = await this.fetch3DStructure(result.cid);
@@ -256,8 +280,8 @@ export class MoleculeService {
 declare global {
     interface Window {
         $3Dmol: {
-            createViewer: (element: HTMLElement, config: any) => Viewer3D;
-            rasmolElementColors: any;
+            createViewer: (element: HTMLElement, config: Record<string, unknown>) => Viewer3D;
+            rasmolElementColors: Record<string, unknown>;
         };
     }
 }
